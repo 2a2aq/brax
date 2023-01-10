@@ -56,7 +56,7 @@ class JaxToTorchWrapper(gym.Wrapper):
 
   def step(self, action):
     action = self.action(action)
-    obs, reward, done, info = super().step(action)
+    obs, reward, done, truncated, info = super().step(action) ##### to match value number
     obs = self.observation(obs)
     reward = self.reward(reward)
     done = self.done(done)
