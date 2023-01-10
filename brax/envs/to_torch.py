@@ -56,7 +56,7 @@ class JaxToTorchWrapper(gym.Wrapper):
 
   def step(self, action):
     action = self.action(action)
-    obs, reward, done, truncated, info = super().step(action) ##### to match value number
+    obs, reward, done, info = super().step(action) ##### to match value number -> not needed in brax env??
     obs = self.observation(obs)
     reward = self.reward(reward)
     done = self.done(done)
