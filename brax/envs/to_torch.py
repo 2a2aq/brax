@@ -62,3 +62,9 @@ class JaxToTorchWrapper(gym.Wrapper):
     done = self.done(done)
     info = self.info(info)
     return obs, reward, done, info
+
+  def step_qp(self, action):
+    action = self.action(action)
+    obs, reward, done, info = super().step(action)
+    obs2 = self.observation(obs)
+    return obs, obs2
