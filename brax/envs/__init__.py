@@ -58,6 +58,7 @@ _envs = {
     'swimmer': swimmer.Swimmer,
     'ur5e': ur5e.Ur5e,
     'walker2d': walker2d.Walker2d,
+    'robot_make': robot_make.Robot
 }
 
 
