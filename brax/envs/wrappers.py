@@ -255,6 +255,10 @@ class GymWrapper(gym.Env):
   def seed(self, seed: int = 0):
     self._key = jax.random.PRNGKey(seed)
 
+  def read_qp(self):##### returns qp state of wrapped env.
+    qp = self._state
+    return qp
+
   def render(self, mode='human'):
     # pylint:disable=g-import-not-at-top
     from brax.io import image
@@ -325,6 +329,10 @@ class VectorGymWrapper(gym.vector.VectorEnv):
 
   def seed(self, seed: int = 0):
     self._key = jax.random.PRNGKey(seed)
+
+  def read_qp(self):##### returns qp state of wrapped env.
+    qp = self._state
+    return qp
 
   def render(self, mode='human'):
     # pylint:disable=g-import-not-at-top
