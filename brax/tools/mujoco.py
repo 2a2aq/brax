@@ -328,7 +328,7 @@ class MujocoConverter(object):
         collider=config_pb2.Collider(
             box=config_pb2.Collider.Box(halfsize=_vec(size)),
             rotation=_euler(rotation),
-            position=position),
+            position=_vec(position)),
         volume=volume,
         mass=mass)
 
@@ -416,6 +416,7 @@ class MujocoConverter(object):
               reference_rotation=reference_rotation))
 
     for child_mujoco_body in mujoco_body.body:
+      print(child_mujoco_body.name)
       self._add_body(child_mujoco_body, body)
 
   def _add_joints(self, mujoco_body: MjcfElement, parent_body: config_pb2.Body,
@@ -455,6 +456,7 @@ class MujocoConverter(object):
       # position (i.e. the relative position with respect to the reference point
       # of the parent) and then change the frame of reference to that of the COM
       # of the parent.
+      print(joint.name)
       parent_offset = local_mujoco_body_pos + local_joint_pos
       # The attachment geometry will preserve the locality, so it is sufficient
       # to change the frame of reference to its COM.
