@@ -1727,77 +1727,77 @@ actuators {
   name: "abdomen_x"
   joint: "abdomen_x"
   strength: 125.0
-  angle {
+  torque {
   }
 }
 actuators {
   name: "abdomen_y"
   joint: "abdomen_y"
   strength: 125.0
-  angle {
+  torque {
   }
 }
 actuators {
   name: "abdomen_z"
   joint: "abdomen_z"
   strength: 125.0
-  angle {
+  torque {
   }
 }
 actuators {
   name: "neck_x"
   joint: "neck_x"
   strength: 20.0
-  angle {
+  torque {
   }
 }
 actuators {
   name: "neck_y"
   joint: "neck_y"
   strength: 20.0
-  angle {
+  torque {
   }
 }
 actuators {
   name: "neck_z"
   joint: "neck_z"
   strength: 20.0
-  angle {
+  torque {
   }
 }
 actuators {
   name: "right_shoulder_x"
   joint: "right_shoulder_x"
   strength: 70.0
-  angle {
+  torque {
   }
 }
 actuators {
   name: "right_shoulder_y"
   joint: "right_shoulder_y"
   strength: 70.0
-  angle {
+  torque {
   }
 }
 actuators {
   name: "right_shoulder_z"
   joint: "right_shoulder_z"
   strength: 70.0
-  angle {
+  torque {
   }
 }
 actuators {
   name: "right_elbow"
   joint: "right_elbow"
   strength: 60.0
-  angle {
+  torque {
   }
 }
 actuators{
   name: "$right_lower_arm.right_hand"
   joint: "$right_lower_arm.right_hand"
   strength: 300.0
-  angle{
+  torque{
 
   }
 }
@@ -1805,35 +1805,35 @@ actuators {
   name: "left_shoulder_x"
   joint: "left_shoulder_x"
   strength: 70.0
-  angle {
+  torque {
   }
 }
 actuators {
   name: "left_shoulder_y"
   joint: "left_shoulder_y"
   strength: 70.0
-  angle {
+  torque {
   }
 }
 actuators {
   name: "left_shoulder_z"
   joint: "left_shoulder_z"
   strength: 70.0
-  angle {
+  torque {
   }
 }
 actuators {
   name: "left_elbow"
   joint: "left_elbow"
   strength: 60.0
-  angle {
+  torque {
   }
 }
 actuators{
   name: "$left_lower_arm.left_hand"
   joint: "$left_lower_arm.left_hand"
   strength: 300.0
-  angle{
+  torque{
 
   }
 }
@@ -1841,98 +1841,98 @@ actuators {
   name: "right_hip_x"
   joint: "right_hip_x"
   strength: 125.0
-  angle {
+  torque {
   }
 }
 actuators {
   name: "right_hip_z"
   joint: "right_hip_z"
   strength: 125.0
-  angle {
+  torque {
   }
 }
 actuators {
   name: "right_hip_y"
   joint: "right_hip_y"
   strength: 125.0
-  angle {
+  torque {
   }
 }
 actuators {
   name: "right_knee"
   joint: "right_knee"
   strength: 100.0
-  angle {
+  torque {
   }
 }
 actuators {
   name: "right_ankle_x"
   joint: "right_ankle_x"
   strength: 50.0
-  angle {
+  torque {
   }
 }
 actuators {
   name: "right_ankle_y"
   joint: "right_ankle_y"
   strength: 50.0
-  angle {
+  torque {
   }
 }
 actuators {
   name: "right_ankle_z"
   joint: "right_ankle_z"
   strength: 50.0
-  angle {
+  torque {
   }
 }
 actuators {
   name: "left_hip_x"
   joint: "left_hip_x"
   strength: 125.0
-  angle {
+  torque {
   }
 }
 actuators {
   name: "left_hip_z"
   joint: "left_hip_z"
   strength: 125.0
-  angle {
+  torque {
   }
 }
 actuators {
   name: "left_hip_y"
   joint: "left_hip_y"
   strength: 125.0
-  angle {
+  torque {
   }
 }
 actuators {
   name: "left_knee"
   joint: "left_knee"
   strength: 100.0
-  angle {
+  torque {
   }
 }
 actuators {
   name: "left_ankle_x"
   joint: "left_ankle_x"
   strength: 50.0
-  angle {
+  torque {
   }
 }
 actuators {
   name: "left_ankle_y"
   joint: "left_ankle_y"
   strength: 50.0
-  angle {
+  torque {
   }
 }
 actuators {
   name: "left_ankle_z"
   joint: "left_ankle_z"
   strength: 50.0
-  angle {
+  torque {
   }
 }
 
