@@ -120,6 +120,9 @@ def train(environment: envs.Env,
   normalize = lambda x, y: x
   if normalize_observations:
     normalize = running_statistics.normalize
+  print(env.observation_size)
+  print(env.action_size)
+  breakpoint()
   ppo_network = network_factory(
       env.observation_size,
       env.action_size,
@@ -332,6 +335,7 @@ def train(environment: envs.Env,
 
   # If there was no mistakes the training_state should still be identical on all
   # devices.
+  print(training_state)
   pmap.assert_is_replicated(training_state)
   params = _unpmap(
       (training_state.normalizer_params, training_state.params.policy))
