@@ -561,22 +561,6 @@ _SYSTEM_CONFIG = """
 
 _SYSTEM_CONFIG_SPRING = """
 bodies {
-  name: "floor"
-  colliders {
-    plane {
-    }
-  }
-  inertia {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-  }
-  mass: 1.0
-  frozen {
-    all: true
-  }
-}
-bodies {
   name: "pelvis"
   colliders {
     position {
@@ -927,9 +911,25 @@ bodies {
   }
   mass: 0.999687135219574
 }
+bodies {
+  name: "floor"
+  colliders {
+    plane {
+    }
+  }
+  inertia {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  mass: 1.0
+  frozen {
+    all: true
+  }
+}
 joints {
   name: "abdomen_x"
-  stiffness: 600.0
+  stiffness: 27000
   parent: "pelvis"
   child: "torso"
   parent_offset {
@@ -941,6 +941,9 @@ joints {
     x: -0.0
     z: -0.0
   }
+  angular_damping: 30
+  spring_damping: 80
+  limit_strength: 2500
   angle_limit {
     min: -60.0
     max: 60.0
@@ -952,7 +955,7 @@ joints {
 }
 joints {
   name: "abdomen_y"
-  stiffness: 600.0
+  stiffness: 27000
   parent: "pelvis"
   child: "torso"
   parent_offset {
@@ -964,6 +967,9 @@ joints {
     x: -0.0
     z: 90.0
   }
+  angular_damping: 30
+  spring_damping: 80
+  limit_strength: 2500
   angle_limit {
     min: -60.0
     max: 90.0
@@ -975,7 +981,7 @@ joints {
 }
 joints {
   name: "abdomen_z"
-  stiffness: 600.0
+  stiffness: 27000
   parent: "pelvis"
   child: "torso"
   parent_offset {
@@ -987,6 +993,9 @@ joints {
     x: -0.0
     y: -90.0
   }
+  angular_damping: 30
+  spring_damping: 80
+  limit_strength: 2500
   angle_limit {
     min: -50.0
     max: 50.0
@@ -998,7 +1007,7 @@ joints {
 }
 joints {
   name: "neck_x"
-  stiffness: 50.0
+  stiffness: 27000
   parent: "torso"
   child: "head"
   parent_offset {
@@ -1010,6 +1019,9 @@ joints {
     x: -0.0
     z: -0.0
   }
+  angular_damping: 30
+  spring_damping: 80
+  limit_strength: 2500
   angle_limit {
     min: -50.0
     max: 50.0
@@ -1021,7 +1033,7 @@ joints {
 }
 joints {
   name: "neck_y"
-  stiffness: 50.0
+  stiffness: 27000
   parent: "torso"
   child: "head"
   parent_offset {
@@ -1033,6 +1045,9 @@ joints {
     x: -0.0
     z: 90.0
   }
+  angular_damping: 30
+  spring_damping: 80
+  limit_strength: 2500
   angle_limit {
     min: -40.0
     max: 60.0
@@ -1044,7 +1059,7 @@ joints {
 }
 joints {
   name: "neck_z"
-  stiffness: 50.0
+  stiffness: 27000
   parent: "torso"
   child: "head"
   parent_offset {
@@ -1056,6 +1071,9 @@ joints {
     x: -0.0
     y: -90.0
   }
+  angular_damping: 30
+  spring_damping: 80
+  limit_strength: 2500
   angle_limit {
     min: -45.0
     max: 45.0
@@ -1067,7 +1085,7 @@ joints {
 }
 joints {
   name: "right_shoulder_x"
-  stiffness: 200.0
+  stiffness: 27000
   parent: "torso"
   child: "right_upper_arm"
   parent_offset {
@@ -1081,6 +1099,9 @@ joints {
     x: -0.0
     z: -0.0
   }
+  angular_damping: 30
+  spring_damping: 80
+  limit_strength: 2500
   angle_limit {
     min: -180.0
     max: 45.0
@@ -1092,7 +1113,7 @@ joints {
 }
 joints {
   name: "right_shoulder_y"
-  stiffness: 200.0
+  stiffness: 27000
   parent: "torso"
   child: "right_upper_arm"
   parent_offset {
@@ -1106,6 +1127,9 @@ joints {
     x: -0.0
     z: 90.0
   }
+  angular_damping: 30
+  spring_damping: 80
+  limit_strength: 2500
   angle_limit {
     min: -180.0
     max: 60.0
@@ -1117,7 +1141,7 @@ joints {
 }
 joints {
   name: "right_shoulder_z"
-  stiffness: 200.0
+  stiffness: 27000
   parent: "torso"
   child: "right_upper_arm"
   parent_offset {
@@ -1131,6 +1155,9 @@ joints {
     x: -0.0
     y: -90.0
   }
+  angular_damping: 30
+  spring_damping: 80
+  limit_strength: 2500
   angle_limit {
     min: -90.0
     max: 90.0
@@ -1142,7 +1169,7 @@ joints {
 }
 joints {
   name: "right_elbow"
-  stiffness: 150.0
+  stiffness: 27000
   parent: "right_upper_arm"
   child: "right_lower_arm"
   parent_offset {
@@ -1154,6 +1181,9 @@ joints {
     x: -0.0
     z: 90.0
   }
+  angular_damping: 30
+  spring_damping: 80
+  limit_strength: 2500
   angle_limit {
     min: -160.0
   }
@@ -1164,7 +1194,7 @@ joints {
 }
 joints {
   name: "$right_lower_arm.right_hand"
-  stiffness: 5000.0
+  stiffness: 27000
   parent: "right_lower_arm"
   child: "right_hand"
   parent_offset {
@@ -1174,6 +1204,9 @@ joints {
     x: -0.0
     y: -90.0
   }
+  angular_damping: 30
+  spring_damping: 80
+  limit_strength: 2500
   angle_limit {
     min: -5.0
     max: 5.0
@@ -1185,7 +1218,7 @@ joints {
 }
 joints {
   name: "left_shoulder_x"
-  stiffness: 200.0
+  stiffness: 27000
   parent: "torso"
   child: "left_upper_arm"
   parent_offset {
@@ -1199,6 +1232,9 @@ joints {
     x: -0.0
     z: -0.0
   }
+  angular_damping: 30
+  spring_damping: 80
+  limit_strength: 2500
   angle_limit {
     min: -45.0
     max: 180.0
@@ -1210,7 +1246,7 @@ joints {
 }
 joints {
   name: "left_shoulder_y"
-  stiffness: 200.0
+  stiffness: 27000
   parent: "torso"
   child: "left_upper_arm"
   parent_offset {
@@ -1224,6 +1260,9 @@ joints {
     x: -0.0
     z: 90.0
   }
+  angular_damping: 30
+  spring_damping: 80
+  limit_strength: 2500
   angle_limit {
     min: -180.0
     max: 60.0
@@ -1235,7 +1274,7 @@ joints {
 }
 joints {
   name: "left_shoulder_z"
-  stiffness: 200.0
+  stiffness: 27000
   parent: "torso"
   child: "left_upper_arm"
   parent_offset {
@@ -1249,6 +1288,9 @@ joints {
     x: -0.0
     y: -90.0
   }
+  angular_damping: 30
+  spring_damping: 80
+  limit_strength: 2500
   angle_limit {
     min: -90.0
     max: 90.0
@@ -1260,7 +1302,7 @@ joints {
 }
 joints {
   name: "left_elbow"
-  stiffness: 150.0
+  stiffness: 27000
   parent: "left_upper_arm"
   child: "left_lower_arm"
   parent_offset {
@@ -1272,6 +1314,9 @@ joints {
     x: -0.0
     z: 90.0
   }
+  angular_damping: 30
+  spring_damping: 80
+  limit_strength: 2500
   angle_limit {
     min: -160.0
   }
@@ -1282,7 +1327,7 @@ joints {
 }
 joints {
   name: "$left_lower_arm.left_hand"
-  stiffness: 5000.0
+  stiffness: 27000
   parent: "left_lower_arm"
   child: "left_hand"
   parent_offset {
@@ -1292,6 +1337,9 @@ joints {
     x: -0.0
     y: -90.0
   }
+  angular_damping: 30
+  spring_damping: 80
+  limit_strength: 2500
   angle_limit {
     min: -5.0
     max: 5.0
@@ -1303,7 +1351,7 @@ joints {
 }
 joints {
   name: "right_hip_x"
-  stiffness: 300.0
+  stiffness: 27000
   parent: "pelvis"
   child: "right_thigh"
   parent_offset {
@@ -1315,6 +1363,9 @@ joints {
     x: -0.0
     z: -0.0
   }
+  angular_damping: 30
+  spring_damping: 80
+  limit_strength: 2500
   angle_limit {
     min: -60.0
     max: 15.0
@@ -1326,7 +1377,7 @@ joints {
 }
 joints {
   name: "right_hip_y"
-  stiffness: 300.0
+  stiffness: 27000
   parent: "pelvis"
   child: "right_thigh"
   parent_offset {
@@ -1338,6 +1389,9 @@ joints {
     x: -0.0
     z: 90.0
   }
+  angular_damping: 30
+  spring_damping: 80
+  limit_strength: 2500
   angle_limit {
     min: -140.0
     max: 60.0
@@ -1349,7 +1403,7 @@ joints {
 }
 joints {
   name: "right_hip_z"
-  stiffness: 300.0
+  stiffness: 27000
   parent: "pelvis"
   child: "right_thigh"
   parent_offset {
@@ -1361,6 +1415,9 @@ joints {
     x: -0.0
     y: -90.0
   }
+  angular_damping: 30
+  spring_damping: 80
+  limit_strength: 2500
   angle_limit {
     min: -60.0
     max: 35.0
@@ -1372,7 +1429,7 @@ joints {
 }
 joints {
   name: "right_knee"
-  stiffness: 300.0
+  stiffness: 27000
   parent: "right_thigh"
   child: "right_shin"
   parent_offset {
@@ -1384,6 +1441,9 @@ joints {
     x: -0.0
     z: 90.0
   }
+  angular_damping: 30
+  spring_damping: 80
+  limit_strength: 2500
   angle_limit {
     max: 160.0
   }
@@ -1394,7 +1454,7 @@ joints {
 }
 joints {
   name: "right_ankle_x"
-  stiffness: 200.0
+  stiffness: 27000
   parent: "right_shin"
   child: "right_foot"
   parent_offset {
@@ -1406,6 +1466,9 @@ joints {
     x: -0.0
     z: -0.0
   }
+  angular_damping: 30
+  spring_damping: 80
+  limit_strength: 2500
   angle_limit {
     min: -30.0
     max: 30.0
@@ -1417,7 +1480,7 @@ joints {
 }
 joints {
   name: "right_ankle_y"
-  stiffness: 200.0
+  stiffness: 27000
   parent: "right_shin"
   child: "right_foot"
   parent_offset {
@@ -1429,6 +1492,9 @@ joints {
     x: -0.0
     z: 90.0
   }
+  angular_damping: 30
+  spring_damping: 80
+  limit_strength: 2500
   angle_limit {
     min: -55.0
     max: 55.0
@@ -1440,7 +1506,7 @@ joints {
 }
 joints {
   name: "right_ankle_z"
-  stiffness: 200.0
+  stiffness: 27000
   parent: "right_shin"
   child: "right_foot"
   parent_offset {
@@ -1452,6 +1518,9 @@ joints {
     x: -0.0
     y: -90.0
   }
+  angular_damping: 30
+  spring_damping: 80
+  limit_strength: 2500
   angle_limit {
     min: -40.0
     max: 40.0
@@ -1463,7 +1532,7 @@ joints {
 }
 joints {
   name: "left_hip_x"
-  stiffness: 300.0
+  stiffness: 27000
   parent: "pelvis"
   child: "left_thigh"
   parent_offset {
@@ -1475,6 +1544,9 @@ joints {
     x: -0.0
     z: -0.0
   }
+  angular_damping: 30
+  spring_damping: 80
+  limit_strength: 2500
   angle_limit {
     min: -15.0
     max: 60.0
@@ -1486,7 +1558,7 @@ joints {
 }
 joints {
   name: "left_hip_y"
-  stiffness: 300.0
+  stiffness: 27000
   parent: "pelvis"
   child: "left_thigh"
   parent_offset {
@@ -1498,6 +1570,9 @@ joints {
     x: -0.0
     z: 90.0
   }
+  angular_damping: 30
+  spring_damping: 80
+  limit_strength: 2500
   angle_limit {
     min: -140.0
     max: 60.0
@@ -1509,7 +1584,7 @@ joints {
 }
 joints {
   name: "left_hip_z"
-  stiffness: 300.0
+  stiffness: 27000
   parent: "pelvis"
   child: "left_thigh"
   parent_offset {
@@ -1521,6 +1596,9 @@ joints {
     x: -0.0
     y: -90.0
   }
+  angular_damping: 30
+  spring_damping: 80
+  limit_strength: 2500
   angle_limit {
     min: -35.0
     max: 60.0
@@ -1532,7 +1610,7 @@ joints {
 }
 joints {
   name: "left_knee"
-  stiffness: 300.0
+  stiffness: 27000
   parent: "left_thigh"
   child: "left_shin"
   parent_offset {
@@ -1544,6 +1622,9 @@ joints {
     x: -0.0
     z: 90.0
   }
+  angular_damping: 30
+  spring_damping: 80
+  limit_strength: 2500
   angle_limit {
     max: 160.0
   }
@@ -1566,7 +1647,7 @@ defaults{
 }
 joints {
   name: "left_ankle_x"
-  stiffness: 200.0
+  stiffness: 27000
   parent: "left_shin"
   child: "left_foot"
   parent_offset {
@@ -1578,6 +1659,9 @@ joints {
     x: -0.0
     z: -0.0
   }
+  angular_damping: 30
+  spring_damping: 80
+  limit_strength: 2500
   angle_limit {
     min: -30.0
     max: 30.0
@@ -1589,7 +1673,7 @@ joints {
 }
 joints {
   name: "left_ankle_y"
-  stiffness: 200.0
+  stiffness: 27000
   parent: "left_shin"
   child: "left_foot"
   parent_offset {
@@ -1601,6 +1685,9 @@ joints {
     x: -0.0
     z: 90.0
   }
+  angular_damping: 30
+  spring_damping: 80
+  limit_strength: 2500
   angle_limit {
     min: -55.0
     max: 55.0
@@ -1612,7 +1699,7 @@ joints {
 }
 joints {
   name: "left_ankle_z"
-  stiffness: 200.0
+  stiffness: 27000
   parent: "left_shin"
   child: "left_foot"
   parent_offset {
@@ -1624,6 +1711,9 @@ joints {
     x: -0.0
     y: -90.0
   }
+  angular_damping: 30
+  spring_damping: 80
+  limit_strength: 2500
   angle_limit {
     min: -40.0
     max: 40.0
@@ -1636,42 +1726,42 @@ joints {
 actuators {
   name: "abdomen_x"
   joint: "abdomen_x"
-  strength: 125.0
+  strength: 350.0
   angle {
   }
 }
 actuators {
   name: "abdomen_y"
   joint: "abdomen_y"
-  strength: 125.0
+  strength: 350.0
   angle {
   }
 }
 actuators {
   name: "abdomen_z"
   joint: "abdomen_z"
-  strength: 125.0
+  strength: 350.0
   angle {
   }
 }
 actuators {
   name: "neck_x"
   joint: "neck_x"
-  strength: 20.0
+  strength: 100.0
   angle {
   }
 }
 actuators {
   name: "neck_y"
   joint: "neck_y"
-  strength: 20.0
+  strength: 100.0
   angle {
   }
 }
 actuators {
   name: "neck_z"
   joint: "neck_z"
-  strength: 20.0
+  strength: 100.0
   angle {
   }
 }
@@ -1699,7 +1789,7 @@ actuators {
 actuators {
   name: "right_elbow"
   joint: "right_elbow"
-  strength: 60.0
+  strength: 300.0
   angle {
   }
 }
@@ -1735,7 +1825,7 @@ actuators {
 actuators {
   name: "left_elbow"
   joint: "left_elbow"
-  strength: 60.0
+  strength: 300.0
   angle {
   }
 }
@@ -1750,106 +1840,102 @@ actuators{
 actuators {
   name: "right_hip_x"
   joint: "right_hip_x"
-  strength: 125.0
+  strength: 300.0
   angle {
   }
 }
 actuators {
   name: "right_hip_z"
   joint: "right_hip_z"
-  strength: 125.0
+  strength: 300.0
   angle {
   }
 }
 actuators {
   name: "right_hip_y"
   joint: "right_hip_y"
-  strength: 125.0
+  strength: 300.0
   angle {
   }
 }
 actuators {
   name: "right_knee"
   joint: "right_knee"
-  strength: 100.0
+  strength: 300.0
   angle {
   }
 }
 actuators {
   name: "right_ankle_x"
   joint: "right_ankle_x"
-  strength: 50.0
+  strength: 300.0
   angle {
   }
 }
 actuators {
   name: "right_ankle_y"
   joint: "right_ankle_y"
-  strength: 50.0
+  strength: 300.0
   angle {
   }
 }
 actuators {
   name: "right_ankle_z"
   joint: "right_ankle_z"
-  strength: 50.0
+  strength: 300.0
   angle {
   }
 }
 actuators {
   name: "left_hip_x"
   joint: "left_hip_x"
-  strength: 125.0
+  strength: 300.0
   angle {
   }
 }
 actuators {
   name: "left_hip_z"
   joint: "left_hip_z"
-  strength: 125.0
+  strength: 300.0
   angle {
   }
 }
 actuators {
   name: "left_hip_y"
   joint: "left_hip_y"
-  strength: 125.0
+  strength: 300.0
   angle {
   }
 }
 actuators {
   name: "left_knee"
   joint: "left_knee"
-  strength: 100.0
+  strength: 300.0
   angle {
   }
 }
 actuators {
   name: "left_ankle_x"
   joint: "left_ankle_x"
-  strength: 50.0
+  strength: 300.0
   angle {
   }
 }
 actuators {
   name: "left_ankle_y"
   joint: "left_ankle_y"
-  strength: 50.0
+  strength: 300.0
   angle {
   }
 }
 actuators {
   name: "left_ankle_z"
   joint: "left_ankle_z"
-  strength: 50.0
+  strength: 300.0
   angle {
   }
 }
 
-friction: 1.0
-gravity { z: -9.8 }
-angular_damping: -0.05
-baumgarte_erp: 0.1
 collide_include {
   first: "pelvis"
   second: "floor"
@@ -1926,6 +2012,10 @@ collide_include {
   first: "left_foot"
   second: "floor"
 }
+friction: 1.0
+gravity { z: -9.8 }
+angular_damping: -0.05
+baumgarte_erp: 0.1
 dt: 0.05
 substeps: 10
 dynamics_mode: "legacy_spring"
