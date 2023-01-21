@@ -25,7 +25,7 @@ class Robot(env.Env):
                ctrl_cost_weight=0.1,
                healthy_reward=5.0,
                terminate_when_unhealthy=True,
-               healthy_z_range=(0.8, 2.1),
+               healthy_z_range=(0.6, 1.2),
                reset_noise_scale=1e-2,
                exclude_current_positions_from_observation=True,
                legacy_spring=True,
@@ -1726,42 +1726,42 @@ joints {
 actuators {
   name: "abdomen_x"
   joint: "abdomen_x"
-  strength: 350.0
+  strength: 125.0
   angle {
   }
 }
 actuators {
   name: "abdomen_y"
   joint: "abdomen_y"
-  strength: 350.0
+  strength: 125.0
   angle {
   }
 }
 actuators {
   name: "abdomen_z"
   joint: "abdomen_z"
-  strength: 350.0
+  strength: 125.0
   angle {
   }
 }
 actuators {
   name: "neck_x"
   joint: "neck_x"
-  strength: 100.0
+  strength: 20.0
   angle {
   }
 }
 actuators {
   name: "neck_y"
   joint: "neck_y"
-  strength: 100.0
+  strength: 20.0
   angle {
   }
 }
 actuators {
   name: "neck_z"
   joint: "neck_z"
-  strength: 100.0
+  strength: 20.0
   angle {
   }
 }
@@ -1789,7 +1789,7 @@ actuators {
 actuators {
   name: "right_elbow"
   joint: "right_elbow"
-  strength: 300.0
+  strength: 60.0
   angle {
   }
 }
@@ -1825,7 +1825,7 @@ actuators {
 actuators {
   name: "left_elbow"
   joint: "left_elbow"
-  strength: 300.0
+  strength: 60.0
   angle {
   }
 }
@@ -1840,146 +1840,102 @@ actuators{
 actuators {
   name: "right_hip_x"
   joint: "right_hip_x"
-  strength: 300.0
+  strength: 125.0
   angle {
   }
 }
 actuators {
   name: "right_hip_z"
   joint: "right_hip_z"
-  strength: 300.0
+  strength: 125.0
   angle {
   }
 }
 actuators {
   name: "right_hip_y"
   joint: "right_hip_y"
-  strength: 300.0
+  strength: 125.0
   angle {
   }
 }
 actuators {
   name: "right_knee"
   joint: "right_knee"
-  strength: 300.0
+  strength: 100.0
   angle {
   }
 }
 actuators {
   name: "right_ankle_x"
   joint: "right_ankle_x"
-  strength: 300.0
+  strength: 50.0
   angle {
   }
 }
 actuators {
   name: "right_ankle_y"
   joint: "right_ankle_y"
-  strength: 300.0
+  strength: 50.0
   angle {
   }
 }
 actuators {
   name: "right_ankle_z"
   joint: "right_ankle_z"
-  strength: 300.0
+  strength: 50.0
   angle {
   }
 }
 actuators {
   name: "left_hip_x"
   joint: "left_hip_x"
-  strength: 300.0
+  strength: 125.0
   angle {
   }
 }
 actuators {
   name: "left_hip_z"
   joint: "left_hip_z"
-  strength: 300.0
+  strength: 125.0
   angle {
   }
 }
 actuators {
   name: "left_hip_y"
   joint: "left_hip_y"
-  strength: 300.0
+  strength: 125.0
   angle {
   }
 }
 actuators {
   name: "left_knee"
   joint: "left_knee"
-  strength: 300.0
+  strength: 100.0
   angle {
   }
 }
 actuators {
   name: "left_ankle_x"
   joint: "left_ankle_x"
-  strength: 300.0
+  strength: 50.0
   angle {
   }
 }
 actuators {
   name: "left_ankle_y"
   joint: "left_ankle_y"
-  strength: 300.0
+  strength: 50.0
   angle {
   }
 }
 actuators {
   name: "left_ankle_z"
   joint: "left_ankle_z"
-  strength: 300.0
+  strength: 50.0
   angle {
   }
 }
 
-collide_include {
-  first: "pelvis"
-  second: "floor"
-}
-collide_include {
-  first: "torso"
-  second: "floor"
-}
-collide_include {
-  first: "head"
-  second: "floor"
-}
-collide_include {
-  first: "right_upper_arm"
-  second: "floor"
-}
-collide_include {
-  first: "right_lower_arm"
-  second: "floor"
-}
-collide_include {
-  first: "right_elbow"
-  second: "floor"
-}
-collide_include {
-  first: "right_hand"
-  second: "floor"
-}
-collide_include {
-  first: "left_upper_arm"
-  second: "floor"
-}
-collide_include {
-  first: "left_lower_arm"
-  second: "floor"
-}
-collide_include {
-  first: "left_elbow"
-  second: "floor"
-}
-collide_include {
-  first: "left_hand"
-  second: "floor"
-}
 collide_include {
   first: "right_thigh"
   second: "floor"
