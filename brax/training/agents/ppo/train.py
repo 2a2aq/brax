@@ -120,9 +120,6 @@ def train(environment: envs.Env,
   normalize = lambda x, y: x
   if normalize_observations:
     normalize = running_statistics.normalize
-  print(env.observation_size)
-  print(env.action_size)
-  breakpoint()
   ppo_network = network_factory(
       env.observation_size,
       env.action_size,
