@@ -571,17 +571,9 @@ bodies {
     y: 1.0
     z: 1.0
   }
+  mass: 1.0
   frozen {
-    position {
-      x: 1.0
-      y: 1.0
-      z: 1.0
-    }
-    rotation {
-      x: 1.0
-      y: 1.0
-      z: 1.0
-    }
+    all: true
   }
 }
 bodies {
@@ -934,27 +926,6 @@ bodies {
     z: 1.0
   }
   mass: 0.999687135219574
-}
-joints {
-  name: "$floor.pelvis"
-  stiffness: 5000.0
-  parent: "floor"
-  child: "pelvis"
-  parent_offset {
-    z: 1.0
-  }
-  rotation {
-    x: -0.0
-    y: -90.0
-  }
-  angle_limit {
-    min: -180
-    max: 180
-  }
-  reference_rotation {
-    x: -0.0
-    z: -0.0
-  }
 }
 joints {
   name: "abdomen_x"
@@ -1660,13 +1631,6 @@ joints {
   reference_rotation {
     x: -0.0
     z: -0.0
-  }
-}
-actuators {
-  name: "$floor.pelvis"
-  joint: "$floor.pelvis"
-  strength: 10.0
-  angle {
   }
 }
 actuators {
