@@ -20,173 +20,21 @@ from brax.envs import env
 
 
 class Robot(env.Env):
-
-
-
-  """
-  ### Description
-
-  This environment is based on the environment introduced by Schulman, Moritz,
-  Levine, Jordan and Abbeel in
-  ["High-Dimensional Continuous Control Using Generalized Advantage Estimation"](https://arxiv.org/abs/1506.02438).
-
-  The ant is a 3D robot consisting of one torso (free rotational body) with four
-  legs attached to it with each leg having two links.
-
-  The goal is to coordinate the four legs to move in the forward (right)
-  direction by applying torques on the eight hinges connecting the two links of
-  each leg and the torso (nine parts and eight hinges).
-
-  ### Action Space
-
-  The agent take a 8-element vector for actions.
-
-  The action space is a continuous `(action, action, action, action, action,
-  action, action, action)` all in `[-1, 1]`, where `action` represents the
-  numerical torques applied at the hinge joints.
-
-  | Num | Action                                                             | Control Min | Control Max | Name (in corresponding config)   | Joint | Unit         |
-  |-----|--------------------------------------------------------------------|-------------|-------------|----------------------------------|-------|--------------|
-  | 0   | Torque applied on the rotor between the torso and front left hip   | -1          | 1           | hip_1 (front_left_leg)           | hinge | torque (N m) |
-  | 1   | Torque applied on the rotor between the front left two links       | -1          | 1           | ankle_1 (front_left_leg)         | hinge | torque (N m) |
-  | 2   | Torque applied on the rotor between the torso and front right hip  | -1          | 1           | hip_2 (front_right_leg)          | hinge | torque (N m) |
-  | 3   | Torque applied on the rotor between the front right two links      | -1          | 1           | ankle_2 (front_right_leg)        | hinge | torque (N m) |
-  | 4   | Torque applied on the rotor between the torso and back left hip    | -1          | 1           | hip_3 (back_leg)                 | hinge | torque (N m) |
-  | 5   | Torque applied on the rotor between the back left two links        | -1          | 1           | ankle_3 (back_leg)               | hinge | torque (N m) |
-  | 6   | Torque applied on the rotor between the torso and back right hip   | -1          | 1           | hip_4 (right_back_leg)           | hinge | torque (N m) |
-  | 7   | Torque applied on the rotor between the back right two links       | -1          | 1           | ankle_4 (right_back_leg)         | hinge | torque (N m) |
-
-  ### Observation Space
-
-  The state space consists of positional values of different body parts of the
-  ant, followed by the velocities of those individual parts (their derivatives)
-  with all the positions ordered before all the velocities.
-
-  The observation is a `ndarray` with shape `(27,)` where the elements correspond to the following:
-
-  | Num | Observation                                                  | Min  | Max | Name (in corresponding config)   | Joint | Unit                     |
-  |-----|--------------------------------------------------------------|------|-----|----------------------------------|-------|--------------------------|
-  | 0   | z-coordinate of the torso (centre)                           | -Inf | Inf | torso                            | free  | position (m)             |
-  | 1   | w-orientation of the torso (centre)                          | -Inf | Inf | torso                            | free  | angle (rad)              |
-  | 2   | x-orientation of the torso (centre)                          | -Inf | Inf | torso                            | free  | angle (rad)              |
-  | 3   | y-orientation of the torso (centre)                          | -Inf | Inf | torso                            | free  | angle (rad)              |
-  | 4   | z-orientation of the torso (centre)                          | -Inf | Inf | torso                            | free  | angle (rad)              |
-  | 5   | angle between torso and first link on front left             | -Inf | Inf | hip_1 (front_left_leg)           | hinge | angle (rad)              |
-  | 6   | angle between the two links on the front left                | -Inf | Inf | ankle_1 (front_left_leg)         | hinge | angle (rad)              |
-  | 7   | angle between torso and first link on front right            | -Inf | Inf | hip_2 (front_right_leg)          | hinge | angle (rad)              |
-  | 8   | angle between the two links on the front right               | -Inf | Inf | ankle_2 (front_right_leg)        | hinge | angle (rad)              |
-  | 9   | angle between torso and first link on back left              | -Inf | Inf | hip_3 (back_leg)                 | hinge | angle (rad)              |
-  | 10  | angle between the two links on the back left                 | -Inf | Inf | ankle_3 (back_leg)               | hinge | angle (rad)              |
-  | 11  | angle between torso and first link on back right             | -Inf | Inf | hip_4 (right_back_leg)           | hinge | angle (rad)              |
-  | 12  | angle between the two links on the back right                | -Inf | Inf | ankle_4 (right_back_leg)         | hinge | angle (rad)              |
-  | 13  | x-coordinate velocity of the torso                           | -Inf | Inf | torso                            | free  | velocity (m/s)           |
-  | 14  | y-coordinate velocity of the torso                           | -Inf | Inf | torso                            | free  | velocity (m/s)           |
-  | 15  | z-coordinate velocity of the torso                           | -Inf | Inf | torso                            | free  | velocity (m/s)           |
-  | 16  | x-coordinate angular velocity of the torso                   | -Inf | Inf | torso                            | free  | angular velocity (rad/s) |
-  | 17  | y-coordinate angular velocity of the torso                   | -Inf | Inf | torso                            | free  | angular velocity (rad/s) |
-  | 18  | z-coordinate angular velocity of the torso                   | -Inf | Inf | torso                            | free  | angular velocity (rad/s) |
-  | 19  | angular velocity of angle between torso and front left link  | -Inf | Inf | hip_1 (front_left_leg)           | hinge | angle (rad)              |
-  | 20  | angular velocity of the angle between front left links       | -Inf | Inf | ankle_1 (front_left_leg)         | hinge | angle (rad)              |
-  | 21  | angular velocity of angle between torso and front right link | -Inf | Inf | hip_2 (front_right_leg)          | hinge | angle (rad)              |
-  | 22  | angular velocity of the angle between front right links      | -Inf | Inf | ankle_2 (front_right_leg)        | hinge | angle (rad)              |
-  | 23  | angular velocity of angle between torso and back left link   | -Inf | Inf | hip_3 (back_leg)                 | hinge | angle (rad)              |
-  | 24  | angular velocity of the angle between back left links        | -Inf | Inf | ankle_3 (back_leg)               | hinge | angle (rad)              |
-  | 25  | angular velocity of angle between torso and back right link  | -Inf | Inf | hip_4 (right_back_leg)           | hinge | angle (rad)              |
-  | 26  | angular velocity of the angle between back right links       | -Inf | Inf | ankle_4 (right_back_leg)         | hinge | angle (rad)              |
-
-  The (x,y,z) coordinates are translational DOFs while the orientations are
-  rotational DOFs expressed as quaternions.
-
-  If use_contact_forces=True, contact forces are added to the observation:
-  external forces and torques applied to the center of mass of each of the
-  links. 60 extra dimensions: the torso link, 8 leg links, and the ground link
-  (10 total), with 6 external forces each (force x, y, z, torque x, y, z).
-
-  ### Rewards
-
-  The reward consists of three parts:
-
-  - *reward_survive*: Every timestep that the ant is alive, it gets a reward of
-    1.
-  - *reward_forward*: A reward of moving forward which is measured as
-    *(x-coordinate before action - x-coordinate after action)/dt*. *dt* is the
-    time between actions - the default *dt = 0.05*. This reward would be
-    positive if the ant moves forward (right) desired.
-  - *reward_ctrl*: A negative reward for penalising the ant if it takes actions
-    that are too large. It is measured as *coefficient **x**
-    sum(action<sup>2</sup>)* where *coefficient* is a parameter set for the
-    control and has a default value of 0.5.
-  - *contact_cost*: A negative reward for penalising the ant if the external
-    contact force is too large. It is calculated *0.5 * 0.001 *
-    sum(clip(external contact force to [-1,1])<sup>2</sup>)*.
-
-  ### Starting State
-
-  All observations start in state (0.0, 0.0,  0.75, 1.0, 0.0  ... 0.0) with a
-  uniform noise in the range of [-0.1, 0.1] added to the positional values and
-  standard normal noise with 0 mean and 0.1 standard deviation added to the
-  velocity values for stochasticity.
-
-  Note that the initial z coordinate is intentionally selected to be slightly
-  high, thereby indicating a standing up ant. The initial orientation is
-  designed to make it face forward as well.
-
-  ### Episode Termination
-
-  The episode terminates when any of the following happens:
-
-  1. The episode duration reaches a 1000 timesteps
-  2. The y-orientation (index 2) in the state is **not** in the range
-     `[0.2, 1.0]`
-
-  ### Arguments
-
-  No additional arguments are currently supported (in v2 and lower), but
-  modifications can be made to the XML file in the assets folder (or by changing
-  the path to a modified XML file in another folder).
-
-  ```
-  env = gym.make('Ant-v2')
-  ```
-
-  v3, v4, and v5 take gym.make kwargs such as ctrl_cost_weight,
-  reset_noise_scale etc.
-
-  ```
-  env = gym.make('Ant-v5', ctrl_cost_weight=0.1, ....)
-  ```
-
-  ### Version History
-
-  * v5: ported to Brax.
-  * v4: all mujoco environments now use the mujoco bindings in mujoco>=2.1.3
-  * v3: support for gym.make kwargs such as xml_file, ctrl_cost_weight,
-        reset_noise_scale etc. rgb rendering comes from tracking camera (so
-        agent does not run away from screen)
-  * v2: All continuous control environments now use mujoco_py >= 1.50
-  * v1: max_time_steps raised to 1000 for robot based tasks. Added
-        reward_threshold to environments.
-  * v0: Initial versions release (1.0.0)
-  """
-
-
   def __init__(self,
-               ctrl_cost_weight=0.5,
-               use_contact_forces=False,
-               contact_cost_weight=5e-4,
-               healthy_reward=1.0,
+               forward_reward_weight=1.25,
+               ctrl_cost_weight=0.1,
+               healthy_reward=5.0,
                terminate_when_unhealthy=True,
-               healthy_z_range=(0.2, 1.0),
-               reset_noise_scale=0.1,
+               healthy_z_range=(0.8, 2.1),
+               reset_noise_scale=1e-2,
                exclude_current_positions_from_observation=True,
                legacy_spring=True,
                **kwargs):
     config = _SYSTEM_CONFIG_SPRING if legacy_spring else _SYSTEM_CONFIG
     super().__init__(config=config, **kwargs)
 
+    self._forward_reward_weight = forward_reward_weight
     self._ctrl_cost_weight = ctrl_cost_weight
-    self._use_contact_forces = use_contact_forces
-    self._contact_cost_weight = contact_cost_weight
     self._healthy_reward = healthy_reward
     self._terminate_when_unhealthy = terminate_when_unhealthy
     self._healthy_z_range = healthy_z_range
@@ -198,23 +46,23 @@ class Robot(env.Env):
   def reset(self, rng: jp.ndarray) -> env.State:
     """Resets the environment to an initial state."""
     rng, rng1, rng2 = jp.random_split(rng, 3)
+
     qpos = self.sys.default_angle() + self._noise(rng1)
     qvel = self._noise(rng2)
 
     qp = self.sys.default_qp(joint_angle=qpos, joint_velocity=qvel)
-    obs = self._get_obs(qp, self.sys.info(qp))
+    obs = self._get_obs(qp, self.sys.info(qp), jp.zeros(self.action_size))
     reward, done, zero = jp.zeros(3)
     metrics = {
-        'reward_forward': zero,
-        'reward_survive': zero,
-        'reward_ctrl': zero,
-        'reward_contact': zero,
+        'forward_reward': zero,
+        'reward_linvel': zero,
+        'reward_quadctrl': zero,
+        'reward_alive': zero,
         'x_position': zero,
         'y_position': zero,
         'distance_from_origin': zero,
         'x_velocity': zero,
         'y_velocity': zero,
-        'forward_reward': zero,
     }
     return env.State(qp, obs, reward, done, metrics)
 
@@ -222,8 +70,10 @@ class Robot(env.Env):
     """Run one timestep of the environment's dynamics."""
     qp, info = self.sys.step(state.qp, action)
 
-    velocity = (qp.pos[0] - state.qp.pos[0]) / self.sys.config.dt
-    forward_reward = velocity[0]
+    com_before = self._center_of_mass(state.qp)
+    com_after = self._center_of_mass(qp)
+    velocity = (com_after - com_before) / self.sys.config.dt
+    forward_reward = self._forward_reward_weight * velocity[0]
 
     min_z, max_z = self._healthy_z_range
     is_healthy = jp.where(qp.pos[0, 2] < min_z, x=0.0, y=1.0)
@@ -232,53 +82,83 @@ class Robot(env.Env):
       healthy_reward = self._healthy_reward
     else:
       healthy_reward = self._healthy_reward * is_healthy
+
     ctrl_cost = self._ctrl_cost_weight * jp.sum(jp.square(action))
-    contact_cost = (self._contact_cost_weight *
-                    jp.sum(jp.square(jp.clip(info.contact.vel, -1, 1))))
-    obs = self._get_obs(qp, info)
-    reward = forward_reward + healthy_reward - ctrl_cost - contact_cost
+
+    obs = self._get_obs(qp, info, action)
+    reward = forward_reward + healthy_reward - ctrl_cost
     done = 1.0 - is_healthy if self._terminate_when_unhealthy else 0.0
     state.metrics.update(
-        reward_forward=forward_reward,
-        reward_survive=healthy_reward,
-        reward_ctrl=-ctrl_cost,
-        reward_contact=-contact_cost,
-        x_position=qp.pos[0, 0],
-        y_position=qp.pos[0, 1],
-        distance_from_origin=jp.norm(qp.pos[0]),
+        forward_reward=forward_reward,
+        reward_linvel=forward_reward,
+        reward_quadctrl=-ctrl_cost,
+        reward_alive=healthy_reward,
+        x_position=com_after[0],
+        y_position=com_after[1],
+        distance_from_origin=jp.norm(com_after),
         x_velocity=velocity[0],
         y_velocity=velocity[1],
-        forward_reward=forward_reward,
     )
 
     return state.replace(qp=qp, obs=obs, reward=reward, done=done)
 
-  def _get_obs(self, qp: brax.QP, info: brax.Info) -> jp.ndarray:
-    """Observe ant body position and velocities."""
-    joint_angle, joint_vel = self.sys.joints[0].angle_vel(qp)
+  def _get_obs(self, qp: brax.QP, info: brax.Info,
+               action: jp.ndarray) -> jp.ndarray:
+    """Observe humanoid body position, velocities, and angles."""
+    angle_vels = [j.angle_vel(qp) for j in self.sys.joints]
 
     # qpos: position and orientation of the torso and the joint angles.
+    joint_angles = [angle for angle, _ in angle_vels]
     if self._exclude_current_positions_from_observation:
-      qpos = [qp.pos[0, 2:], qp.rot[0], joint_angle]
+      qpos = [qp.pos[0, 2:], qp.rot[0]] + joint_angles
     else:
-      qpos = [qp.pos[0], qp.rot[0], joint_angle]
+      qpos = [qp.pos[0], qp.rot[0]] + joint_angles
 
     # qvel: velocity of the torso and the joint angle velocities.
-    qvel = [qp.vel[0], qp.ang[0], joint_vel]
+    joint_velocities = [vel for _, vel in angle_vels]
+    qvel = [qp.vel[0], qp.ang[0]] + joint_velocities
+
+    # center of mass obs:
+    com = self._center_of_mass(qp)
+    mass_sum = jp.sum(self.sys.body.mass[:-1])
+
+    def com_vals(body, qp):
+      d = qp.pos - com
+      com_inr = body.mass * jp.eye(3) * jp.norm(d) ** 2
+      com_inr += jp.diag(body.inertia) - jp.outer(d, d)
+      com_vel = body.mass * qp.vel / mass_sum
+      com_ang = jp.cross(d, qp.vel) / (1e-7 + jp.norm(d) ** 2)
+
+      return com_inr, com_vel, com_ang
+
+    com_inr, com_vel, com_ang = jp.vmap(com_vals)(self.sys.body, qp)
+    cinert = [com_inr[:-1].ravel()]
+    cvel = [com_vel[:-1].ravel(), com_ang[:-1].ravel()]
+
+    # actuator forces
+    qfrc_actuator = []
+    for act in self.sys.actuators:
+      torque = jp.take(action, act.act_index)
+      torque = torque.reshape(torque.shape[:-2] + (-1,))
+      torque *= jp.repeat(act.strength, act.act_index.shape[-1])
+      qfrc_actuator.append(torque)
 
     # external contact forces:
     # delta velocity (3,), delta ang (3,) * 10 bodies in the system
-    if self._use_contact_forces:
-      cfrc = [
-          jp.clip(info.contact.vel, -1, 1),
-          jp.clip(info.contact.ang, -1, 1)
-      ]
-      # flatten bottom dimension
-      cfrc = [jp.reshape(x, x.shape[:-2] + (-1,)) for x in cfrc]
-    else:
-      cfrc = []
+    # can be calculated in brax like so:
+    # cfrc = [
+    #     jp.clip(info.contact.vel, -1, 1),
+    #     jp.clip(info.contact.ang, -1, 1)
+    # ]
+    # flatten bottom dimension
+    # cfrc = [jp.reshape(x, x.shape[:-2] + (-1,)) for x in cfrc]
+    # then add it to the jp.concatenate below
 
-    return jp.concatenate(qpos + qvel + cfrc)
+    return jp.concatenate(qpos + qvel + cinert + cvel + qfrc_actuator)
+
+  def _center_of_mass(self, qp):
+    mass, pos = self.sys.body.mass[:-1], qp.pos[:-1]
+    return jp.sum(jp.vmap(jp.multiply)(mass, pos), axis=0) / jp.sum(mass)
 
   def _noise(self, rng):
     low, hi = -self._reset_noise_scale, self._reset_noise_scale
@@ -1068,6 +948,8 @@ joints {
     y: -90.0
   }
   angle_limit {
+    min: -180
+    max: 180
   }
   reference_rotation {
     x: -0.0
@@ -1149,10 +1031,9 @@ joints {
   parent: "torso"
   child: "head"
   parent_offset {
-    z: 0.4477880001068115
+    z: 0.22389400005340576
   }
   child_offset {
-    z: 0.22389400005340576
   }
   rotation {
     x: -0.0
@@ -1173,10 +1054,9 @@ joints {
   parent: "torso"
   child: "head"
   parent_offset {
-    z: 0.4477880001068115
+    z: 0.22389400005340576
   }
   child_offset {
-    z: 0.22389400005340576
   }
   rotation {
     x: -0.0
@@ -1197,10 +1077,9 @@ joints {
   parent: "torso"
   child: "head"
   parent_offset {
-    z: 0.4477880001068115
+    z: 0.22389400005340576
   }
   child_offset {
-    z: 0.22389400005340576
   }
   rotation {
     x: -0.0
@@ -1221,14 +1100,11 @@ joints {
   parent: "torso"
   child: "right_upper_arm"
   parent_offset {
-    x: -0.04809999838471413
-    y: -0.36621999740600586
-    z: 0.4869999885559082
-  }
-  child_offset {
     x: -0.024049999192357063
     y: -0.18310999870300293
     z: 0.2434999942779541
+  }
+  child_offset {
   }
   rotation {
     x: -0.0
@@ -1249,14 +1125,11 @@ joints {
   parent: "torso"
   child: "right_upper_arm"
   parent_offset {
-    x: -0.04809999838471413
-    y: -0.36621999740600586
-    z: 0.4869999885559082
-  }
-  child_offset {
     x: -0.024049999192357063
     y: -0.18310999870300293
     z: 0.2434999942779541
+  }
+  child_offset {
   }
   rotation {
     x: -0.0
@@ -1277,14 +1150,11 @@ joints {
   parent: "torso"
   child: "right_upper_arm"
   parent_offset {
-    x: -0.04809999838471413
-    y: -0.36621999740600586
-    z: 0.4869999885559082
-  }
-  child_offset {
     x: -0.024049999192357063
     y: -0.18310999870300293
     z: 0.2434999942779541
+  }
+  child_offset {
   }
   rotation {
     x: -0.0
@@ -1305,10 +1175,9 @@ joints {
   parent: "right_upper_arm"
   child: "right_lower_arm"
   parent_offset {
-    z: -0.5495759844779968
+    z: -0.2747879922389984
   }
   child_offset {
-    z: -0.2747879922389984
   }
   rotation {
     x: -0.0
@@ -1335,6 +1204,8 @@ joints {
     y: -90.0
   }
   angle_limit {
+    min: -5.0
+    max: 5.0
   }
   reference_rotation {
     x: -0.0
@@ -1347,14 +1218,11 @@ joints {
   parent: "torso"
   child: "left_upper_arm"
   parent_offset {
-    x: -0.04809999838471413
-    y: 0.36621999740600586
-    z: 0.4869999885559082
-  }
-  child_offset {
     x: -0.024049999192357063
     y: 0.18310999870300293
     z: 0.2434999942779541
+  }
+  child_offset {
   }
   rotation {
     x: -0.0
@@ -1375,14 +1243,11 @@ joints {
   parent: "torso"
   child: "left_upper_arm"
   parent_offset {
-    x: -0.04809999838471413
-    y: 0.36621999740600586
-    z: 0.4869999885559082
-  }
-  child_offset {
     x: -0.024049999192357063
     y: 0.18310999870300293
     z: 0.2434999942779541
+  }
+  child_offset {
   }
   rotation {
     x: -0.0
@@ -1403,14 +1268,11 @@ joints {
   parent: "torso"
   child: "left_upper_arm"
   parent_offset {
-    x: -0.04809999838471413
-    y: 0.36621999740600586
-    z: 0.4869999885559082
-  }
-  child_offset {
     x: -0.024049999192357063
     y: 0.18310999870300293
     z: 0.2434999942779541
+  }
+  child_offset {
   }
   rotation {
     x: -0.0
@@ -1431,10 +1293,9 @@ joints {
   parent: "left_upper_arm"
   child: "left_lower_arm"
   parent_offset {
-    z: -0.5495759844779968
+    z: -0.2747879922389984
   }
   child_offset {
-    z: -0.2747879922389984
   }
   rotation {
     x: -0.0
@@ -1461,6 +1322,8 @@ joints {
     y: -90.0
   }
   angle_limit {
+    min: -5.0
+    max: 5.0
   }
   reference_rotation {
     x: -0.0
@@ -1473,10 +1336,9 @@ joints {
   parent: "pelvis"
   child: "right_thigh"
   parent_offset {
-    y: -0.16977399587631226
+    y: -0.08488699793815613
   }
   child_offset {
-    y: -0.08488699793815613
   }
   rotation {
     x: -0.0
@@ -1497,10 +1359,9 @@ joints {
   parent: "pelvis"
   child: "right_thigh"
   parent_offset {
-    y: -0.16977399587631226
+    y: -0.08488699793815613
   }
   child_offset {
-    y: -0.08488699793815613
   }
   rotation {
     x: -0.0
@@ -1521,10 +1382,9 @@ joints {
   parent: "pelvis"
   child: "right_thigh"
   parent_offset {
-    y: -0.16977399587631226
+    y: -0.08488699793815613
   }
   child_offset {
-    y: -0.08488699793815613
   }
   rotation {
     x: -0.0
@@ -1545,10 +1405,9 @@ joints {
   parent: "right_thigh"
   child: "right_shin"
   parent_offset {
-    z: -0.8430920243263245
+    z: -0.42154601216316223
   }
   child_offset {
-    z: -0.42154601216316223
   }
   rotation {
     x: -0.0
@@ -1568,10 +1427,9 @@ joints {
   parent: "right_shin"
   child: "right_foot"
   parent_offset {
-    z: -0.8197399973869324
+    z: -0.4098699986934662
   }
   child_offset {
-    z: -0.4098699986934662
   }
   rotation {
     x: -0.0
@@ -1592,10 +1450,9 @@ joints {
   parent: "right_shin"
   child: "right_foot"
   parent_offset {
-    z: -0.8197399973869324
+    z: -0.4098699986934662
   }
   child_offset {
-    z: -0.4098699986934662
   }
   rotation {
     x: -0.0
@@ -1616,10 +1473,9 @@ joints {
   parent: "right_shin"
   child: "right_foot"
   parent_offset {
-    z: -0.8197399973869324
+    z: -0.4098699986934662
   }
   child_offset {
-    z: -0.4098699986934662
   }
   rotation {
     x: -0.0
@@ -1640,10 +1496,9 @@ joints {
   parent: "pelvis"
   child: "left_thigh"
   parent_offset {
-    y: 0.16977399587631226
+    y: 0.08488699793815613
   }
   child_offset {
-    y: 0.08488699793815613
   }
   rotation {
     x: -0.0
@@ -1664,10 +1519,9 @@ joints {
   parent: "pelvis"
   child: "left_thigh"
   parent_offset {
-    y: 0.16977399587631226
+    y: 0.08488699793815613
   }
   child_offset {
-    y: 0.08488699793815613
   }
   rotation {
     x: -0.0
@@ -1688,10 +1542,9 @@ joints {
   parent: "pelvis"
   child: "left_thigh"
   parent_offset {
-    y: 0.16977399587631226
+    y: 0.08488699793815613
   }
   child_offset {
-    y: 0.08488699793815613
   }
   rotation {
     x: -0.0
@@ -1712,10 +1565,9 @@ joints {
   parent: "left_thigh"
   child: "left_shin"
   parent_offset {
-    z: -0.8430920243263245
+    z: -0.42154601216316223
   }
   child_offset {
-    z: -0.42154601216316223
   }
   rotation {
     x: -0.0
@@ -1729,16 +1581,27 @@ joints {
     z: -0.0
   }
 }
+defaults{
+  angles{
+    name: "left_knee"
+    angle {
+    }
+  }
+  angles{
+    name: "right_knee"
+    angle {
+    }
+  }
+}
 joints {
   name: "left_ankle_x"
   stiffness: 200.0
   parent: "left_shin"
   child: "left_foot"
   parent_offset {
-    z: -0.8197399973869324
+    z: -0.4098699986934662
   }
   child_offset {
-    z: -0.4098699986934662
   }
   rotation {
     x: -0.0
@@ -1759,10 +1622,9 @@ joints {
   parent: "left_shin"
   child: "left_foot"
   parent_offset {
-    z: -0.8197399973869324
+    z: -0.4098699986934662
   }
   child_offset {
-    z: -0.4098699986934662
   }
   rotation {
     x: -0.0
@@ -1783,10 +1645,9 @@ joints {
   parent: "left_shin"
   child: "left_foot"
   parent_offset {
-    z: -0.8197399973869324
+    z: -0.4098699986934662
   }
   child_offset {
-    z: -0.4098699986934662
   }
   rotation {
     x: -0.0
@@ -1799,6 +1660,13 @@ joints {
   reference_rotation {
     x: -0.0
     z: -0.0
+  }
+}
+actuators {
+  name: "$floor.pelvis"
+  joint: "$floor.pelvis"
+  strength: 10.0
+  angle {
   }
 }
 actuators {
@@ -1871,6 +1739,14 @@ actuators {
   angle {
   }
 }
+actuators{
+  name: "$right_lower_arm.right_hand"
+  joint: "$right_lower_arm.right_hand"
+  strength: 300.0
+  angle{
+
+  }
+}
 actuators {
   name: "left_shoulder_x"
   joint: "left_shoulder_x"
@@ -1897,6 +1773,14 @@ actuators {
   joint: "left_elbow"
   strength: 60.0
   angle {
+  }
+}
+actuators{
+  name: "$left_lower_arm.left_hand"
+  joint: "$left_lower_arm.left_hand"
+  strength: 300.0
+  angle{
+
   }
 }
 actuators {
