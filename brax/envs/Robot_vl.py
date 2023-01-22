@@ -1835,41 +1835,29 @@ actuators {
   torque {
   }
 }
-collide_include {
-  first: "floor"
-  second: "right_thigh"
-}
-collide_include {
-  first: "floor"
-  second: "right_shin"
-}
-collide_include {
-  first: "floor"
-  second: "right_foot"
-}
-collide_include {
-  first: "floor"
-  second: "left_thigh"
-}
-collide_include {
-  first: "floor"
-  second: "left_shin"
-}
-collide_include {
-  first: "floor"
-  second: "left_foot"
-}
+
 defaults{
   angles{
     name: "left_knee"
     angle {
+      x:40
     }
   }
   angles{
     name: "right_knee"
     angle {
+      x:40
     }
   }
+  angles{
+    name: "right_hip_z"
+    angle {
+    }
+  }
+  angles{
+    name: "left_hip_z"
+    angle {
+    }
 }
 friction: 1.0
 gravity { z: -9.8 }
