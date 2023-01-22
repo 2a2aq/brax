@@ -17,7 +17,7 @@
 import brax
 from brax import jumpy as jp
 from brax.envs import env
-import jax
+from jax import lax
 
 
 class Robot(env.Env):
@@ -84,10 +84,11 @@ class Robot(env.Env):
     # else:
     #   healthy_reward = self._healthy_reward * is_healthy
     
-    state = jax.lax.cond(
-        is_healthy==True, # Condition
+    state = lax.cond(
+        is_healthy, # Condition
         lambda x: self.reset(), # What to do if condition is true
         lambda x: state, # What to do if condition is false
+        state
     )
     healthy_reward = -200 + is_healthy*105
 
