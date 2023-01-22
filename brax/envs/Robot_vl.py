@@ -24,7 +24,7 @@ class Robot(env.Env):
                forward_reward_weight=1.25,
                ctrl_cost_weight=0.1,
                healthy_reward=5.0,
-               terminate_when_unhealthy=True,
+               terminate_when_unhealthy=False,
                healthy_z_range=(0.6, 1.2),
                reset_noise_scale=1e-2,
                exclude_current_positions_from_observation=True,
@@ -78,10 +78,14 @@ class Robot(env.Env):
     min_z, max_z = self._healthy_z_range
     is_healthy = jp.where(qp.pos[0, 2] < min_z, x=0.0, y=1.0)
     is_healthy = jp.where(qp.pos[0, 2] > max_z, x=0.0, y=is_healthy)
-    if self._terminate_when_unhealthy:
-      healthy_reward = self._healthy_reward
-    else:
-      healthy_reward = self._healthy_reward * is_healthy
+    # if self._terminate_when_unhealthy:
+    #   healthy_reward = self._healthy_reward
+    # else:
+    #   healthy_reward = self._healthy_reward * is_healthy
+    healthy_reward = 3
+    if not is_healthy:
+      state= self.reset()
+      healthy_reward = -100
 
     ctrl_cost = self._ctrl_cost_weight * jp.sum(jp.square(action))
 
