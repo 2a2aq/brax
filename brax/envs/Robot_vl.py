@@ -1837,6 +1837,14 @@ actuators {
 }
 collide_include {
     first: "floor"
+    second: "left_shin"
+}
+collide_include {
+    first: "floor"
+    second: "right_shin"
+}
+collide_include {
+    first: "floor"
     second: "left_foot"
 }
 collide_include {
