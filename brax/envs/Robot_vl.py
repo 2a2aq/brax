@@ -1858,6 +1858,7 @@ defaults{
     name: "left_hip_z"
     angle {
     }
+  }
 }
 friction: 1.0
 gravity { z: -9.8 }
