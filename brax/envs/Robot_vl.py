@@ -1861,10 +1861,22 @@ defaults{
   angles{
     name: "left_knee"
     angle {
+      x:40
     }
   }
   angles{
     name: "right_knee"
+    angle {
+      x:40
+    }
+  }
+  angles{
+    name: "right_hip_z"
+    angle {
+    }
+  }
+  angles{
+    name: "left_hip_z"
     angle {
     }
   }
