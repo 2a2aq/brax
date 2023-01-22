@@ -1833,10 +1833,25 @@ actuators {
   torque {
   }
 }
-
+collide_include {
+  first: "floor"
+  second: "right_thigh"
+}
+collide_include {
+  first: "floor"
+  second: "right_shin"
+}
 collide_include {
   first: "floor"
   second: "right_foot"
+}
+collide_include {
+  first: "floor"
+  second: "left_thigh"
+}
+collide_include {
+  first: "floor"
+  second: "left_shin"
 }
 collide_include {
   first: "floor"
