@@ -1881,7 +1881,6 @@ defaults{
 friction: 1.0
 gravity { z: -9.8 }
 angular_damping: -0.05
-baumgarte_erp: 0.1
 dt: 0.05
 substeps: 10
 dynamics_mode: "pbd"
