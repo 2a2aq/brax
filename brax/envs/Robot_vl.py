@@ -17,6 +17,7 @@
 import brax
 from brax import jumpy as jp
 from brax.envs import env
+import jax
 
 
 class Robot(env.Env):
