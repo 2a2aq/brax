@@ -47,6 +47,7 @@ class Robot(env.Env):
   def reset(self, rng: jp.ndarray) -> env.State:
     """Resets the environment to an initial state."""
     rng, rng1, rng2 = jp.random_split(rng, 3)
+    self._rng = rng
 
     qpos = self.sys.default_angle() + self._noise(rng1)
     qvel = self._noise(rng2)
@@ -86,7 +87,7 @@ class Robot(env.Env):
     
     state = lax.cond(
         is_healthy, # Condition
-        lambda x: self.reset(), # What to do if condition is true
+        lambda x: self.reset(self._rng), # What to do if condition is true
         lambda x: state, # What to do if condition is false
         state
     )
