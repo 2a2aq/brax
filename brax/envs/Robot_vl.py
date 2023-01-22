@@ -1835,36 +1835,12 @@ actuators {
 }
 
 collide_include {
-  first: "right_thigh"
-  second: "floor"
+  first: "floor"
+  second: "right_foot"
 }
 collide_include {
-  first: "right_shin"
-  second: "floor"
-}
-collide_include {
-  first: "right_knee"
-  second: "floor"
-}
-collide_include {
-  first: "right_foot"
-  second: "floor"
-}
-collide_include {
-  first: "left_thigh"
-  second: "floor"
-}
-collide_include {
-  first: "left_shin"
-  second: "floor"
-}
-collide_include {
-  first: "left_knee"
-  second: "floor"
-}
-collide_include {
-  first: "left_foot"
-  second: "floor"
+  first: "floor"
+  second: "left_foot"
 }
 defaults{
   angles{
