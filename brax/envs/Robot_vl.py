@@ -1835,7 +1835,14 @@ actuators {
   torque {
   }
 }
-
+collide_include {
+    first: "floor"
+    second: "left_shin"
+}
+collide_include {
+    first: "floor"
+    second: "right_shin"
+}
 defaults{
   angles{
     name: "left_knee"
