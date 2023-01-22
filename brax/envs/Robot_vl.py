@@ -82,11 +82,13 @@ class Robot(env.Env):
     #   healthy_reward = self._healthy_reward
     # else:
     #   healthy_reward = self._healthy_reward * is_healthy
-    if is_healthy:
-      healthy_reward = 3
-    else:
-      state= self.reset()
-      healthy_reward = -100
+    
+    state = jax.lax.cond(
+        is_healthy==True, # Condition
+        lambda x: self.reset(), # What to do if condition is true
+        lambda x: state, # What to do if condition is false
+    )
+    healthy_reward = -200 + is_healthy*105
 
     ctrl_cost = self._ctrl_cost_weight * jp.sum(jp.square(action))
 
