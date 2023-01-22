@@ -82,8 +82,9 @@ class Robot(env.Env):
     #   healthy_reward = self._healthy_reward
     # else:
     #   healthy_reward = self._healthy_reward * is_healthy
-    healthy_reward = 3
-    if not is_healthy:
+    if is_healthy:
+      healthy_reward = 3
+    else:
       state= self.reset()
       healthy_reward = -100
 
