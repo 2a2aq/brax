@@ -1024,11 +1024,11 @@ actuators {
   defaults {
     angles {
       name: "left_hip_xyz"
-      angle { x: 5. y: 0 z: 0 }
+      angle { x: 0. y: 0 z: 0 }
     }
     angles {
       name: "right_hip_xyz"
-      angle { x: 5. y: 0 z: 0 }
+      angle { x: 0. y: 0 z: 0 }
     }
     angles {
       name: "left_knee"
