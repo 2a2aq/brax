@@ -22,11 +22,11 @@ from brax.envs import env
 class Robot(env.Env):
 
   def __init__(self,
-               forward_reward_weight=1.25,
+               forward_reward_weight=5.25,
                ctrl_cost_weight=0.1,
                healthy_reward=5.0,
                terminate_when_unhealthy=True,
-               healthy_z_range=(0.7, 2.1),
+               healthy_z_range=(0.3, 2.1),
                reset_noise_scale=1e-2,
                exclude_current_positions_from_observation=True,
                legacy_spring=False,
