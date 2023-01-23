@@ -12,26 +12,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Trains an ant to run in the +x direction."""
+"""Trains a humanoid to run in the +x direction."""
 
 import brax
 from brax import jumpy as jp
 from brax.envs import env
-from jax import lax
 
 
 class Robot(env.Env):
+
   def __init__(self,
                forward_reward_weight=1.25,
                ctrl_cost_weight=0.1,
                healthy_reward=5.0,
                terminate_when_unhealthy=True,
-               healthy_z_range=(0.6, 1.2),
+               healthy_z_range=(0.8, 2.1),
                reset_noise_scale=1e-2,
                exclude_current_positions_from_observation=True,
-               legacy_spring=True,
+               legacy_spring=False,
                **kwargs):
-    config = _SYSTEM_CONFIG_SPRING if legacy_spring else _SYSTEM_CONFIG
+    config = _SYSTEM_CONFIG_SPRING 
     super().__init__(config=config, **kwargs)
 
     self._forward_reward_weight = forward_reward_weight
@@ -47,7 +47,6 @@ class Robot(env.Env):
   def reset(self, rng: jp.ndarray) -> env.State:
     """Resets the environment to an initial state."""
     rng, rng1, rng2 = jp.random_split(rng, 3)
-    self._rng = rng
 
     qpos = self.sys.default_angle() + self._noise(rng1)
     qvel = self._noise(rng2)
@@ -71,6 +70,7 @@ class Robot(env.Env):
   def step(self, state: env.State, action: jp.ndarray) -> env.State:
     """Run one timestep of the environment's dynamics."""
     qp, info = self.sys.step(state.qp, action)
+
     com_before = self._center_of_mass(state.qp)
     com_after = self._center_of_mass(qp)
     velocity = (com_after - com_before) / self.sys.config.dt
@@ -83,19 +83,19 @@ class Robot(env.Env):
       healthy_reward = self._healthy_reward
     else:
       healthy_reward = self._healthy_reward * is_healthy
-    
+
     ctrl_cost = self._ctrl_cost_weight * jp.sum(jp.square(action))
 
     obs = self._get_obs(qp, info, action)
     reward = forward_reward + healthy_reward - ctrl_cost
     done = 1.0 - is_healthy if self._terminate_when_unhealthy else 0.0
     state.metrics.update(
-        forward_reward=state.qp.pos[0,0],
-        reward_linvel=state.qp.pos[0,2],
+        forward_reward=forward_reward,
+        reward_linvel=forward_reward,
         reward_quadctrl=-ctrl_cost,
         reward_alive=healthy_reward,
-        x_position=qp.pos[0,0],
-        y_position=qp.pos[0,2],
+        x_position=com_after[0],
+        y_position=com_after[1],
         distance_from_origin=jp.norm(com_after),
         x_velocity=velocity[0],
         y_velocity=velocity[1],
@@ -164,401 +164,6 @@ class Robot(env.Env):
   def _noise(self, rng):
     low, hi = -self._reset_noise_scale, self._reset_noise_scale
     return jp.random_uniform(rng, (self.sys.num_joint_dof,), low, hi)
-
-# TODO: name bodies in config according to mujoco xml
-# pelvis mass 4/3pi*(0.09)^3*2226
-# upper_waist mass 4/3pi*(0.07)^3*2226
-# torso mass 4/3pi*(0.11)^3*1794
-# right_clavicle length sqrt[(length fromto_x-x)^2+..]
-# right_clavicle mass pir^2*l*density
-# right_foot mass 8xyz*density
-_SYSTEM_CONFIG = """
-  bodies {
-    name: "pelvis"
-    colliders {
-      capsule{
-        radius: 0.09
-        length: 0.18
-      }
-    }
-    inertia { x: 1.0 y: 1.0 z: 1.0 }
-    mass : 6.7973760600
-  }
-  bodies {
-    name: "upper_waist"
-    colliders {
-      capsule{
-        radius: 0.07
-        length: 0.14
-      }
-      inertia { x: 1.0 y: 1.0 z: 1.0 }
-      mass : 3.1982167196
-    }
-  }
-  bodies {
-    name: "torso"
-    colliders {
-      capsule{
-        radius: 0.11
-        length: 0.22
-      }
-      inertia { x: 1.0 y: 1.0 z: 1.0 }
-      mass : 10.0020518941
-    }
-  }
-  bodies {
-    name: "right_clavicle"
-    colliders{
-      rotation { z: -153.09 y: 87.23 }
-      capsule{
-        radius: 0.045
-        length: 0.1822662381
-      }
-    }
-    inertia { x: 1.0 y: 1.0 z: 1.0 }
-    mass : 1.2754804765
-  }
-  bodies {
-    name: "left_clavicle"
-    colliders{
-      rotation { z: 153.09 y: 87.23 }
-      capsule{
-        radius: 0.045
-        length: 0.1822662381
-      }
-    }
-    inertia { x: 1.0 y: 1.0 z: 1.0 }
-    mass : 1.2754804765
-  }
-  bodies {
-    name: "head"
-    colliders{
-      capsule{
-        radius: 0.095
-        length: 0.190
-      }
-    }
-    inertia { x: 1.0 y: 1.0 z: 1.0 }
-    mass : 3.8822644860
-  }
-  bodies {
-    name: "right_upper_arm"
-    colliders{
-      capsule{
-        radius: 0.045
-        length: 0.1800000000
-      }
-    }
-    inertia { x: 1.0 y: 1.0 z: 1.0 }
-    mass : 1.1244985328
-  }
-  bodies {
-    name: "right_lower_arm"
-    colliders{
-      capsule{
-        radius: 0.04
-        length: 0.1350000000
-      }
-    }
-    inertia { x: 1.0 y: 1.0 z: 1.0 }
-    mass : 0.7165847179
-  }
-  bodies {
-    name: "right_hand"
-    colliders{
-      capsule{
-        radius: 0.04
-        length: 0.08
-      }
-    }
-    inertia { x: 1.0 y: 1.0 z: 1.0 }
-    mass : 0.4999739988
-  }
-  bodies {
-    name: "left_upper_arm"
-    colliders{
-      capsule{
-        radius: 0.045
-        length: 0.1800000000
-      }
-    }
-    inertia { x: 1.0 y: 1.0 z: 1.0 }
-    mass : 1.1244985328
-  }
-  bodies {
-    name: "left_lower_arm"
-    colliders{
-      capsule{
-        radius: 0.04
-        length: 0.1350000000
-      }
-    }
-    inertia { x: 1.0 y: 1.0 z: 1.0 }
-    mass : 0.7165847179
-  }
-  bodies {
-    name: "left_hand"
-    colliders{
-      capsule{
-        radius: 0.04
-        length: 0.08
-      }
-    }
-    inertia { x: 1.0 y: 1.0 z: 1.0 }
-    mass : 0.4999739988
-  }
-  bodies {
-    name: "right_thigh"
-    colliders{
-      capsule{
-        radius: 0.055
-        length: 0.3000000000
-      }
-    }
-    inertia { x: 1.0 y: 1.0 z: 1.0 }
-    mass : 3.6179130777
-  }
-  bodies {
-    name: "right_shin"
-    colliders{
-      capsule{
-        radius: 0.05
-        length: 0.3100000000
-      }
-    }
-    inertia { x: 1.0 y: 1.0 z: 1.0 }
-    mass : 2.4688205868
-  }
-  bodies {
-    name: "right_foot"
-    colliders{
-      box{
-        halfsize { x: 0.0885 y: 0.045 z: 0.0275}
-      }
-    }
-    inertia { x: 1.0 y: 1.0 z: 1.0 }
-    mass : 0.9996871500
-  }
-  bodies {
-    name: "left_thigh"
-    colliders{
-      capsule{
-        radius: 0.055
-        length: 0.3000000000
-      }
-    }
-    inertia { x: 1.0 y: 1.0 z: 1.0 }
-    mass : 3.6179130777
-  }
-  bodies {
-    name: "left_shin"
-    colliders{
-      capsule{
-        radius: 0.05
-        length: 0.3100000000
-      }
-    }
-    inertia { x: 1.0 y: 1.0 z: 1.0 }
-    mass : 2.4688205868
-  }
-  bodies {
-    name: "left_foot"
-    colliders{
-      box{
-        halfsize { x: 0.0885 y: 0.045 z: 0.0275}
-      }
-    }
-    inertia { x: 1.0 y: 1.0 z: 1.0 }
-    mass : 0.9996871500
-  }
-  bodies {
-    name: "Ground"
-    colliders {
-      plane {}
-    }
-    inertia { x: 1.0 y: 1.0 z: 1.0 }
-    mass: 1
-    frozen { all: true }
-  }
-  joints {
-    name: "line25"
-    parent_offset {z: 0.93}
-    child_offset {z: 0.795}
-    parent: "pelvis"
-    child: "upper_waist"
-    angular_damping: 60
-  }
-  joints {
-    name: "line38"
-    parent_offset {z: 0.126151}
-    child_offset {z: 0.116151}
-    parent: "torso
-  }
-
-
-
-  
-  joints {
-    name: "hip_1"
-    parent_offset { x: 0.2 y: 0.2 }
-    child_offset { x: -0.1 y: -0.1 }
-    parent: "$ Torso"
-    child: "Aux 1"
-    angle_limit { min: -30.0 max: 30.0 }
-    rotation { y: -90 }
-    angular_damping: 20
-  }
-  joints {
-    name: "ankle_1"
-    parent_offset { x: 0.1 y: 0.1 }
-    child_offset { x: -0.2 y: -0.2 }
-    parent: "Aux 1"
-    child: "$ Body 4"
-    rotation: { z: 135 }
-    angle_limit {
-      min: 30.0
-      max: 70.0
-    }
-    angular_damping: 20
-  }
-  joints {
-    name: "hip_2"
-    parent_offset { x: -0.2 y: 0.2 }
-    child_offset { x: 0.1 y: -0.1 }
-    parent: "$ Torso"
-    child: "Aux 2"
-    rotation { y: -90 }
-    angle_limit { min: -30.0 max: 30.0 }
-    angular_damping: 20
-  }
-  joints {
-    name: "ankle_2"
-    parent_offset { x: -0.1 y: 0.1 }
-    child_offset { x: 0.2 y: -0.2 }
-    parent: "Aux 2"
-    child: "$ Body 7"
-    rotation { z: 45 }
-    angle_limit { min: -70.0 max: -30.0 }
-    angular_damping: 20
-  }
-  joints {
-    name: "hip_3"
-    parent_offset { x: -0.2 y: -0.2 }
-    child_offset { x: 0.1 y: 0.1 }
-    parent: "$ Torso"
-    child: "Aux 3"
-    rotation { y: -90 }
-    angle_limit { min: -30.0 max: 30.0 }
-    angular_damping: 20
-  }
-  joints {
-    name: "ankle_3"
-    parent_offset { x: -0.1 y: -0.1 }
-    child_offset {
-      x: 0.2
-      y: 0.2
-    }
-    parent: "Aux 3"
-    child: "$ Body 10"
-    rotation { z: 135 }
-    angle_limit { min: -70.0 max: -30.0 }
-    angular_damping: 20
-  }
-  joints {
-    name: "hip_4"
-    parent_offset { x: 0.2 y: -0.2 }
-    child_offset { x: -0.1 y: 0.1 }
-    parent: "$ Torso"
-    child: "Aux 4"
-    rotation { y: -90 }
-    angle_limit { min: -30.0 max: 30.0 }
-    angular_damping: 20
-  }
-  joints {
-    name: "ankle_4"
-    parent_offset { x: 0.1 y: -0.1 }
-    child_offset { x: -0.2 y: 0.2 }
-    parent: "Aux 4"
-    child: "$ Body 13"
-    rotation { z: 45 }
-    angle_limit { min: 30.0 max: 70.0 }
-    angular_damping: 20
-  }
-  actuators {
-    name: "hip_1"
-    joint: "hip_1"
-    strength: 350.0
-    torque {}
-  }
-  actuators {
-    name: "ankle_1"
-    joint: "ankle_1"
-    strength: 350.0
-    torque {}
-  }
-  actuators {
-    name: "hip_2"
-    joint: "hip_2"
-    strength: 350.0
-    torque {}
-  }
-  actuators {
-    name: "ankle_2"
-    joint: "ankle_2"
-    strength: 350.0
-    torque {}
-  }
-  actuators {
-    name: "hip_3"
-    joint: "hip_3"
-    strength: 350.0
-    torque {}
-  }
-  actuators {
-    name: "ankle_3"
-    joint: "ankle_3"
-    strength: 350.0
-    torque {}
-  }
-  actuators {
-    name: "hip_4"
-    joint: "hip_4"
-    strength: 350.0
-    torque {}
-  }
-  actuators {
-    name: "ankle_4"
-    joint: "ankle_4"
-    strength: 350.0
-    torque {}
-  }
-  friction: 1.0
-  gravity { z: -9.8 }
-  angular_damping: -0.05
-  collide_include {
-    first: "$ Torso"
-    second: "Ground"
-  }
-  collide_include {
-    first: "$ Body 4"
-    second: "Ground"
-  }
-  collide_include {
-    first: "$ Body 7"
-    second: "Ground"
-  }
-  collide_include {
-    first: "$ Body 10"
-    second: "Ground"
-  }
-  collide_include {
-    first: "$ Body 13"
-    second: "Ground"
-  }
-  dt: 0.05
-  substeps: 10
-  dynamics_mode: "pbd"
-  """
 
 _SYSTEM_CONFIG_SPRING = """
 bodies {
@@ -1688,7 +1293,7 @@ actuators {
 actuators {
   name: "right_elbow"
   joint: "right_elbow"
-  strength: 600.0
+  strength: 60.0
   torque {
   }
 }
@@ -1697,7 +1302,6 @@ actuators{
   joint: "$right_lower_arm.right_hand"
   strength: 300.0
   torque{
-
   }
 }
 actuators {
@@ -1733,7 +1337,104 @@ actuators{
   joint: "$left_lower_arm.left_hand"
   strength: 300.0
   torque{
-
+  }
+}
+actuators {
+  name: "right_hip_x"
+  joint: "right_hip_x"
+  strength: 125.0
+  torque {
+  }
+}
+actuators {
+  name: "right_hip_z"
+  joint: "right_hip_z"
+  strength: 125.0
+  torque {
+  }
+}
+actuators {
+  name: "right_hip_y"
+  joint: "right_hip_y"
+  strength: 125.0
+  torque {
+  }
+}
+actuators {
+  name: "right_knee"
+  joint: "right_knee"
+  strength: 100.0
+  torque {
+  }
+}
+actuators {
+  name: "right_ankle_x"
+  joint: "right_ankle_x"
+  strength: 50.0
+  torque {
+  }
+}
+actuators {
+  name: "right_ankle_y"
+  joint: "right_ankle_y"
+  strength: 50.0
+  torque {
+  }
+}
+actuators {
+  name: "right_ankle_z"
+  joint: "right_ankle_z"
+  strength: 50.0
+  torque {
+  }
+}
+actuators {
+  name: "left_hip_x"
+  joint: "left_hip_x"
+  strength: 125.0
+  torque {
+  }
+}
+actuators {
+  name: "left_hip_z"
+  joint: "left_hip_z"
+  strength: 125.0
+  torque {
+  }
+}
+actuators {
+  name: "left_hip_y"
+  joint: "left_hip_y"
+  strength: 125.0
+  torque {
+  }
+}
+actuators {
+  name: "left_knee"
+  joint: "left_knee"
+  strength: 100.0
+  torque {
+  }
+}
+actuators {
+  name: "left_ankle_x"
+  joint: "left_ankle_x"
+  strength: 50.0
+  torque {
+  }
+}
+actuators {
+  name: "left_ankle_y"
+  joint: "left_ankle_y"
+  strength: 50.0
+  torque {
+  }
+}
+actuators {
+  name: "left_ankle_z"
+  joint: "left_ankle_z"
+  strength: 50.0
+  torque {
   }
 }
 collide_include {
@@ -1780,6 +1481,6 @@ friction: 1.0
 gravity { z: -9.8 }
 angular_damping: -0.05
 dt: 0.05
-substeps: 10
+substeps: 30
 dynamics_mode: "pbd"
 """
