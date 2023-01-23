@@ -91,7 +91,7 @@ class Robot(env.Env):
     done = 1.0 - is_healthy if self._terminate_when_unhealthy else 0.0
     state.metrics.update(
         forward_reward=state.qp.pos[0,0],
-        reward_linvel=qp.pos[0,2],
+        reward_linvel=state.qp.pos[0,2],
         reward_quadctrl=-ctrl_cost,
         reward_alive=healthy_reward,
         x_position=qp.pos[0,0],
@@ -1664,176 +1664,6 @@ actuators {
   torque {
   }
 }
-actuators {
-  name: "right_shoulder_x"
-  joint: "right_shoulder_x"
-  strength: 70.0
-  torque {
-  }
-}
-actuators {
-  name: "right_shoulder_y"
-  joint: "right_shoulder_y"
-  strength: 70.0
-  torque {
-  }
-}
-actuators {
-  name: "right_shoulder_z"
-  joint: "right_shoulder_z"
-  strength: 70.0
-  torque {
-  }
-}
-actuators {
-  name: "right_elbow"
-  joint: "right_elbow"
-  strength: 60.0
-  torque {
-  }
-}
-actuators{
-  name: "$right_lower_arm.right_hand"
-  joint: "$right_lower_arm.right_hand"
-  strength: 300.0
-  torque{
-
-  }
-}
-actuators {
-  name: "left_shoulder_x"
-  joint: "left_shoulder_x"
-  strength: 70.0
-  torque {
-  }
-}
-actuators {
-  name: "left_shoulder_y"
-  joint: "left_shoulder_y"
-  strength: 70.0
-  torque {
-  }
-}
-actuators {
-  name: "left_shoulder_z"
-  joint: "left_shoulder_z"
-  strength: 70.0
-  torque {
-  }
-}
-actuators {
-  name: "left_elbow"
-  joint: "left_elbow"
-  strength: 60.0
-  torque {
-  }
-}
-actuators{
-  name: "$left_lower_arm.left_hand"
-  joint: "$left_lower_arm.left_hand"
-  strength: 300.0
-  torque{
-
-  }
-}
-actuators {
-  name: "right_hip_x"
-  joint: "right_hip_x"
-  strength: 125.0
-  torque {
-  }
-}
-actuators {
-  name: "right_hip_z"
-  joint: "right_hip_z"
-  strength: 125.0
-  torque {
-  }
-}
-actuators {
-  name: "right_hip_y"
-  joint: "right_hip_y"
-  strength: 125.0
-  torque {
-  }
-}
-actuators {
-  name: "right_knee"
-  joint: "right_knee"
-  strength: 100.0
-  torque {
-  }
-}
-actuators {
-  name: "right_ankle_x"
-  joint: "right_ankle_x"
-  strength: 50.0
-  torque {
-  }
-}
-actuators {
-  name: "right_ankle_y"
-  joint: "right_ankle_y"
-  strength: 50.0
-  torque {
-  }
-}
-actuators {
-  name: "right_ankle_z"
-  joint: "right_ankle_z"
-  strength: 50.0
-  torque {
-  }
-}
-actuators {
-  name: "left_hip_x"
-  joint: "left_hip_x"
-  strength: 125.0
-  torque {
-  }
-}
-actuators {
-  name: "left_hip_z"
-  joint: "left_hip_z"
-  strength: 125.0
-  torque {
-  }
-}
-actuators {
-  name: "left_hip_y"
-  joint: "left_hip_y"
-  strength: 125.0
-  torque {
-  }
-}
-actuators {
-  name: "left_knee"
-  joint: "left_knee"
-  strength: 100.0
-  torque {
-  }
-}
-actuators {
-  name: "left_ankle_x"
-  joint: "left_ankle_x"
-  strength: 50.0
-  torque {
-  }
-}
-actuators {
-  name: "left_ankle_y"
-  joint: "left_ankle_y"
-  strength: 50.0
-  torque {
-  }
-}
-actuators {
-  name: "left_ankle_z"
-  joint: "left_ankle_z"
-  strength: 50.0
-  torque {
-  }
-}
 collide_include {
     first: "floor"
     second: "left_shin"
@@ -1878,6 +1708,6 @@ friction: 1.0
 gravity { z: -9.8 }
 angular_damping: -0.05
 dt: 0.05
-substeps: 30
+substeps: 10
 dynamics_mode: "pbd"
 """
