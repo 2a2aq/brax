@@ -1744,13 +1744,6 @@ actuators {
   }
 }
 actuators {
-  name: "right_hip_z"
-  joint: "right_hip_z"
-  strength: 125.0
-  torque {
-  }
-}
-actuators {
   name: "right_hip_y"
   joint: "right_hip_y"
   strength: 125.0
@@ -1758,22 +1751,16 @@ actuators {
   }
 }
 actuators {
-  name: "right_knee"
-  joint: "right_knee"
-  strength: 100.0
-  torque {
-  }
-}
-actuators {
-  name: "left_hip_x"
-  joint: "left_hip_x"
+  name: "right_hip_z"
+  joint: "right_hip_z"
   strength: 125.0
   torque {
   }
 }
+
 actuators {
-  name: "left_hip_z"
-  joint: "left_hip_z"
+  name: "left_hip_x"
+  joint: "left_hip_x"
   strength: 125.0
   torque {
   }
@@ -1786,9 +1773,9 @@ actuators {
   }
 }
 actuators {
-  name: "left_knee"
-  joint: "left_knee"
-  strength: 100.0
+  name: "left_hip_z"
+  joint: "left_hip_z"
+  strength: 125.0
   torque {
   }
 }
