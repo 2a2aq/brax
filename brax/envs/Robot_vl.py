@@ -1758,6 +1758,13 @@ actuators {
   }
 }
 actuators {
+  name: "right_knee"
+  joint: "right_knee"
+  strength: 100.0
+  torque {
+  }
+}
+actuators {
   name: "left_hip_x"
   joint: "left_hip_x"
   strength: 125.0
@@ -1778,7 +1785,13 @@ actuators {
   torque {
   }
 }
-
+actuators {
+  name: "left_knee"
+  joint: "left_knee"
+  strength: 100.0
+  torque {
+  }
+}
 collide_include {
     first: "floor"
     second: "left_shin"
