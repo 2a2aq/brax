@@ -26,7 +26,7 @@ class Robot(env.Env):
                ctrl_cost_weight=0.1,
                healthy_reward=5.0,
                terminate_when_unhealthy=True,
-               healthy_z_range=(0.3, 2.1),
+               healthy_z_range=(0.8, 2.1),
                reset_noise_scale=1e-2,
                exclude_current_positions_from_observation=True,
                legacy_spring=False,
@@ -165,31 +165,6 @@ class Robot(env.Env):
     low, hi = -self._reset_noise_scale, self._reset_noise_scale
     return jp.random_uniform(rng, (self.sys.num_joint_dof,), low, hi)
 _SYSTEM_CONFIG = """
-  bodies {
-  name: "pelvis"
-  colliders {
-    position {
-      z: 0.07000000029802322
-    }
-    sphere {
-      radius: 0.09000000357627869
-    }
-  }
-  colliders {
-    position {
-      z: 0.20499999821186066
-    }
-    sphere {
-      radius: 0.07000000029802322
-    }
-  }
-  inertia {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-  }
-  mass: 9.995593070983887
-}
 bodies {
   name: "torso"
   colliders {
@@ -238,6 +213,31 @@ bodies {
     z: 1.0
   }
   mass: 12.01148796081543
+}
+bodies {
+  name: "pelvis"
+  colliders {
+    position {
+      z: 0.07000000029802322
+    }
+    sphere {
+      radius: 0.09000000357627869
+    }
+  }
+  colliders {
+    position {
+      z: 0.20499999821186066
+    }
+    sphere {
+      radius: 0.07000000029802322
+    }
+  }
+  inertia {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+  mass: 9.995593070983887
 }
 bodies {
   name: "head"
@@ -1040,11 +1040,11 @@ collide_include {
     }
     angles {
       name: "left_knee"
-      angle { x: 15. y: 0 z: 0 }
+      angle { x: 10. y: 0 z: 0 }
     }
     angles {
       name: "right_knee"
-      angle { x: 15. y: 0 z: 0 }
+      angle { x: 10. y: 0 z: 0 }
     }
   }
   friction: 1.0
