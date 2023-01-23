@@ -72,6 +72,13 @@ class Robot(env.Env):
     """Run one timestep of the environment's dynamics."""
     qp, info = self.sys.step(state.qp, action)
 
+    print("state before")
+    print(state.qp)
+    print("action")
+    print(action)
+    print("state after")
+    print(qp)
+
     com_before = self._center_of_mass(state.qp)
     com_after = self._center_of_mass(qp)
     velocity = (com_after - com_before) / self.sys.config.dt
