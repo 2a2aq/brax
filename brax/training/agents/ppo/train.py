@@ -194,8 +194,11 @@ def train(environment: envs.Env,
           extra_fields=('truncation',))
       return (next_state, next_key), data
 
-    (state, _), data = jax.lax.scan(
-        f, (state, key_generate_unroll), (),
+    # (state, _), data = jax.lax.scan(
+    #     f, (state, key_generate_unroll), (),
+    #     length=batch_size * num_minibatches // num_envs)
+    (state, _), data = f(
+        (state, key_generate_unroll), (),
         length=batch_size * num_minibatches // num_envs)
     # Have leading dimentions (batch_size * num_minibatches, unroll_length)
     data = jax.tree_util.tree_map(lambda x: jnp.swapaxes(x, 1, 2), data)
