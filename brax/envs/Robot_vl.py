@@ -90,12 +90,12 @@ class Robot(env.Env):
     reward = forward_reward + healthy_reward - ctrl_cost
     done = 1.0 - is_healthy if self._terminate_when_unhealthy else 0.0
     state.metrics.update(
-        forward_reward=qp,
-        reward_linvel=forward_reward,
+        forward_reward=state.qp.pos[0,0],
+        reward_linvel=qp.pos[0,2],
         reward_quadctrl=-ctrl_cost,
         reward_alive=healthy_reward,
-        x_position=com_after[0],
-        y_position=com_after[1],
+        x_position=qp.pos[0,0],
+        y_position=qp.pos[0,2],
         distance_from_origin=jp.norm(com_after),
         x_velocity=velocity[0],
         y_velocity=velocity[1],
