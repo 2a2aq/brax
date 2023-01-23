@@ -1688,7 +1688,7 @@ actuators {
 actuators {
   name: "right_elbow"
   joint: "right_elbow"
-  strength: 60.0
+  strength: 600.0
   torque {
   }
 }
