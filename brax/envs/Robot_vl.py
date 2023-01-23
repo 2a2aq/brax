@@ -1024,11 +1024,11 @@ actuators {
   defaults {
     angles {
       name: "left_knee"
-      angle { x: -25. y: 0 z: 0 }
+      angle { x: 25. y: 0 z: 0 }
     }
     angles {
       name: "right_knee"
-      angle { x: -25. y: 0 z: 0 }
+      angle { x: 25. y: 0 z: 0 }
     }
   }
   friction: 1.0
