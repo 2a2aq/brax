@@ -119,6 +119,7 @@ class Evaluator:
 
     t = time.time()
     eval_state = self._generate_eval_unroll(policy_params, unroll_key)
+    print(eval_state)
     eval_metrics = eval_state.info['eval_metrics']
     eval_metrics.active_episodes.block_until_ready()
     epoch_eval_time = time.time() - t

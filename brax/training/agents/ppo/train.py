@@ -194,12 +194,10 @@ def train(environment: envs.Env,
           extra_fields=('truncation',))
       return (next_state, next_key), data
 
-    # (state, _), data = jax.lax.scan(
-    #     f, (state, key_generate_unroll), (),
-    #     length=batch_size * num_minibatches // num_envs)
-    (state, _), data = f(
-        (state, key_generate_unroll), (),
+    (state, _), data = jax.lax.scan(
+        f, (state, key_generate_unroll), (),
         length=batch_size * num_minibatches // num_envs)
+
     # Have leading dimentions (batch_size * num_minibatches, unroll_length)
     data = jax.tree_util.tree_map(lambda x: jnp.swapaxes(x, 1, 2), data)
     data = jax.tree_util.tree_map(lambda x: jnp.reshape(x, (-1,) + x.shape[2:]),
@@ -335,7 +333,6 @@ def train(environment: envs.Env,
 
   # If there was no mistakes the training_state should still be identical on all
   # devices.
-  print(training_state)
   pmap.assert_is_replicated(training_state)
   params = _unpmap(
       (training_state.normalizer_params, training_state.params.policy))
